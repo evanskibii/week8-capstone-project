@@ -1,0 +1,54 @@
+name: afyaplus-week8-ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lint_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: pip}
+      - run: pip install -r requirements.txt
+      - run: ruff check --ignore E401,E701,E702,E501 .
+      - run: python check_prompt_pin.py
+      - run: pytest -q
+  eval:
+    needs: lint_test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: pip}
+      - run: pip install -r requirements.txt
+      - run: python eval_prompts.py | tee eval-output.json
+      - uses: actions/upload-artifact@v4
+        with: {name: eval-output, path: eval-output.json}
+  mcp_health:
+    needs: eval
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python scripts/check_mcp_health.py
+  build_deploy_stub:
+    needs: mcp_health
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build aligned image tag
+        run: docker build -t afyaplus-triage:${GITHUB_REF_NAME:-v1.3.0} .
+      - name: Record image digest and deploy stub
+        run: |
+          docker image inspect afyaplus-triage:${GITHUB_REF_NAME:-v1.3.0} --format '{{.Id}}' | tee image-digest.txt
+          echo 'DEPLOY STUB: gates passed; production credentials intentionally not configured.' | tee deploy-stub.log
+      - uses: actions/upload-artifact@v4
+        with: {name: deploy-evidence, path: "*.txt\n*.log"}

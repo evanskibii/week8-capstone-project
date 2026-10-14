@@ -1,0 +1,41 @@
+trigger: [main]
+pr: [main]
+pool: {vmImage: ubuntu-latest}
+variables: {python.version: '3.11'}
+stages:
+- stage: LintTest
+  jobs:
+  - job: checks
+    steps:
+    - task: UsePythonVersion@0
+      inputs: {versionSpec: '$(python.version)'}
+    - script: pip install -r requirements.txt
+    - script: ruff check --ignore E401,E701,E702,E501 .
+    - script: python check_prompt_pin.py
+    - script: pytest -q
+- stage: Eval
+  dependsOn: LintTest
+  jobs:
+  - job: regression_gate
+    steps:
+    - task: UsePythonVersion@0
+      inputs: {versionSpec: '$(python.version)'}
+    - script: pip install -r requirements.txt
+    - script: python eval_prompts.py
+- stage: MCPHealth
+  dependsOn: Eval
+  jobs:
+  - job: health
+    steps:
+    - task: UsePythonVersion@0
+      inputs: {versionSpec: '$(python.version)'}
+    - script: python scripts/check_mcp_health.py
+- stage: BuildDeployStub
+  dependsOn: MCPHealth
+  condition: succeeded()
+  jobs:
+  - job: build
+    steps:
+    - script: docker build -t afyaplus-triage:v1.3.0 .
+    - script: docker image inspect afyaplus-triage:v1.3.0 --format='{{.Id}}' | tee image-digest.txt
+    - script: echo 'DEPLOY STUB only; no cloud credentials required.'

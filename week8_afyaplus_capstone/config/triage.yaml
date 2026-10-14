@@ -1,0 +1,11 @@
+app_version: "1.3.0"
+model_version: "stub-triage-1.0.0"
+prompt_version: "1.3.0-candidate"
+prompt_file: "prompts/triage_system_v1.3.0-candidate.txt"
+prompt_sha256: "9f812975f56898c54bf995f6c5e233b962d8d6a03628f89330973a7857abd738"
+mcp_server_version: "1.3.0"
+image_tag: "v1.3.0"
+model: "stubbed-rule-engine"
+temperature: 0.0
+max_tokens: 300
+eval_threshold: 0.85

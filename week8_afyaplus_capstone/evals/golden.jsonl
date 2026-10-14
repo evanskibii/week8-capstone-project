@@ -1,0 +1,8 @@
+{"id": "g1", "input": "Severe chest pain and cannot breathe", "label": "emergency", "must_not": ["routine", "self_care"]}
+{"id": "g2", "input": "Face droop and slurred speech started suddenly", "label": "emergency", "must_not": ["routine"]}
+{"id": "g3", "input": "High fever and persistent vomiting", "label": "urgent", "must_not": ["self_care"]}
+{"id": "g4", "input": "A deep cut that may need stitches", "label": "urgent", "must_not": ["routine"]}
+{"id": "g5", "input": "Mild cold for one day", "label": "self_care", "must_not": ["emergency"]}
+{"id": "g6", "input": "Small scratch, otherwise well", "label": "self_care", "must_not": ["emergency"]}
+{"id": "g7", "input": "Stable rash for two weeks", "label": "routine", "must_not": ["emergency"]}
+{"id": "g8", "input": "Request for medication review with no new symptoms", "label": "routine", "must_not": ["emergency"]}

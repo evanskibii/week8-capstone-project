@@ -1,0 +1,26 @@
+{
+  "g1": {
+    "urgency": "emergency"
+  },
+  "g2": {
+    "urgency": "emergency"
+  },
+  "g3": {
+    "urgency": "urgent"
+  },
+  "g4": {
+    "urgency": "urgent"
+  },
+  "g5": {
+    "urgency": "self_care"
+  },
+  "g6": {
+    "urgency": "self_care"
+  },
+  "g7": {
+    "urgency": "routine"
+  },
+  "g8": {
+    "urgency": "routine"
+  }
+}

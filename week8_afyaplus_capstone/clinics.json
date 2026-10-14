@@ -1,0 +1,18 @@
+[
+  {
+    "clinic_id": "CLINIC-001",
+    "name": "AfyaPlus Central",
+    "stock": {
+      "oxygen": 24,
+      "gloves": 500
+    }
+  },
+  {
+    "clinic_id": "CLINIC-002",
+    "name": "AfyaPlus East",
+    "stock": {
+      "oxygen": 8,
+      "gloves": 240
+    }
+  }
+]
